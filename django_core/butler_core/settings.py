@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "drf_yasg",
     "rest_framework",
     "django_cleanup",
+    "django_celery_beat",
 
     "butler_core.bot",
     "butler_core.apps.users",
