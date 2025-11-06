@@ -43,17 +43,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    "butler_core.bot",
+    "butler_core.apps.users",
+    "butler_core.apps.periodic_tasks",
+    "butler_core.apps.vpn_configs",
+
     "corsheaders",
     "solo",
     "drf_yasg",
     "rest_framework",
     "django_cleanup",
     "django_celery_beat",
-
-    "butler_core.bot",
-    "butler_core.apps.users",
-    "butler_core.apps.periodic_tasks",
-    "butler_core.apps.vpn_configs",
 ]
 
 MIDDLEWARE = [
