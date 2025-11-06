@@ -30,7 +30,8 @@ def check_vpn_config(config_path):
         return False
     logger.info(f"Ваш реальный IP: {original_ip}")
 
-    command = ["openvpn", "--config", config_path]
+    allowed_ciphers = "AES-256-GCM:AES-128-GCM:CHACHA20-POLY1305:AES-128-CBC"
+    command = ["sudo", "openvpn", "--config", config_path, "--data-ciphers", allowed_ciphers]
 
     process = None
     try:
