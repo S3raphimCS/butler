@@ -1,0 +1,19 @@
+{% extends "admin/change_list.html" %}
+{% load i18n %}
+
+{# Используем специальный блок Jazzmin для добавления кнопок #}
+{% block page_actions %}
+  {# Сначала выводим стандартные кнопки (например, "Добавить") #}
+  {{ block.super }}
+
+  {# Наша первая кнопка: "Запустить поиск конфигов" #}
+  <a href="{% url 'admin:vpn_configs_vpnconfig_search_configs' %}" class="btn btn-primary">
+    {% trans "Запустить поиск конфигов" %}
+  </a>
+
+  {# Наша вторая кнопка: "Запустить проверку конфигов" #}
+  {# Добавляем небольшой отступ слева для красоты #}
+  <a href="{% url 'admin:vpn_configs_vpnconfig_check_configs' %}" class="btn btn-info" style="margin-left: 5px;">
+    {% trans "Запустить проверку конфигов" %}
+  </a>
+{% endblock %}
