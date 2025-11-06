@@ -8,4 +8,4 @@ python "manage.py" setup_tasks
 
 python "manage.py" start_webhook
 
-gunicorn -c "$PROJECT_ROOT/gunicorn.conf.py" server.wsgi:application
+gunicorn -c "$PROJECT_ROOT/gunicorn.conf.py" butler_core.wsgi:application
