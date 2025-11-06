@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 from django.conf import settings
 from loguru import logger
+from django.core.files.base import ContentFile
 
 from butler_core import celery_app
 from butler_core.apps.periodic_tasks.helpers import check_vpn_config
@@ -47,11 +48,9 @@ def parse_configs():
             download_link = download_url + link_tag
             logger.info(country, name_match, download_link)
 
-            local_filepath = os.path.join(filepath, name_match + ".ovpn")
             response = requests.get(download_link, timeout=20)
             response.raise_for_status()
-            with open(local_filepath, 'wb') as file:
-                file.write(response.content)
+            file = ContentFile(response.content, name=name_match+".ovpn")
             VpnConfig.objects.get_or_create(country=country, name=name_match+".ovpn", file=file)
             # command = ["curl", "--output", f"configs/{name_match}.ovpn", download_link]
             # logger.info((command)
