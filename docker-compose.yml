@@ -27,7 +27,7 @@ services:
 
   celery_beat:
     <<: *app_default
-    command: celery --app butler.celery_app.app beat --loglevel=info
+    command: celery --app butler_core.celery_app.app beat --loglevel=info
 
   bot:
     <<: *app_default
