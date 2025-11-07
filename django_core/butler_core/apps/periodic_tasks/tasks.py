@@ -123,5 +123,5 @@ def send_daily_mailing():
                                           sending_status=SendingStatus.ERROR)
                 logger.error(f"Произошла ошибка при отправки рассылки {err}")
             else:
-                MailingLog.objects.create(mailing=subscription, user=subscription.user, status=SendingStatus.SUCCESS)
+                MailingLog.objects.create(mailing=subscription, user=subscription.user, sending_status=SendingStatus.SUCCESS)
     logger.info("Ежедневная рассылка завершена.")
