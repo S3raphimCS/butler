@@ -10,7 +10,7 @@ class MailingSubscription(models.Model):
     created_at = models.DateTimeField(verbose_name="Дата создания", auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user} - {"Активна" if self.is_active else "Неактивна"}"
+        return f"{self.user} - {'Активна' if self.is_active else 'Неактивна'}"
 
     class Meta:
         verbose_name = "Подписка на рассылку"
