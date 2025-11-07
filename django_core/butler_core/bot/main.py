@@ -7,6 +7,8 @@ from butler_core.bot.handlers.configs import (
     config_does_not_work,
     config_menu,
     get_configs,
+    choose_specific_country_config,
+    get_specific_country_configs
 )
 from butler_core.bot.handlers.mailings import mailing_menu, toggle_mailing_subscription
 from butler_core.bot.handlers.menu import menu, menu_callback
@@ -57,6 +59,12 @@ CALLBACK_HANDLERS_MAP = {
     },
     toggle_mailing_subscription: {
         "func": lambda callback: callback.data == Callback.MAILING_TOGGLE_SUBSCRIBE.value
+    },
+    get_specific_country_configs: {
+        "func": lambda callback: callback.data == Callback.GET_SPECIFIC_COUNTRY_CONFIGS.value
+    },
+    choose_specific_country_config: {
+        "func": lambda callback: callback.data.startswith(Callback.CHOOSE_SPECIFIC_COUNTRY_CONFIG.value)
     },
 }
 

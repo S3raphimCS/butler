@@ -9,6 +9,7 @@ from butler_core.bot.handlers.menu import menu
 from butler_core.bot.utils import messages
 from butler_core.bot.utils.error_handler import ErrorHandler
 from butler_core.bot.utils.keyboards import KeyboardConstructor
+from django.db.models import Count
 
 
 @ErrorHandler.create()
@@ -66,3 +67,30 @@ def get_unavailable_config(message: Message, bot: TeleBot) -> None:
         else:
             bot.send_message(telegram_id, messages.CONFIG_NOT_FOUND)
             return menu(message, bot)
+
+
+@ErrorHandler.create()
+def get_specific_country_configs(callback: CallbackQuery, bot: TeleBot) -> None:
+    telegram_id = callback.message.chat.id
+    message = messages.SELECT_SPECIFIC_COUNTRY
+    countries = [i["country"] for i in VpnConfig.objects.values('country').annotate(
+        config_count=Count('id')).order_by('-config_count')][:8]
+    data = {}
+    for country in countries:
+        data.update({country: f"choose_specific_country_config:{country}"})
+    keyboard = KeyboardConstructor().create_inline_keyboard(data)
+    bot.send_message(telegram_id, message, reply_markup=keyboard)
+
+
+@ErrorHandler.create()
+def choose_specific_country_config(callback: CallbackQuery, bot: TeleBot) -> None:
+    telegram_id = callback.message.chat.id
+    country = callback.data.split(":")[1].strip()
+    configs = VpnConfig.objects.filter(country=country, is_working=True)[:10]
+    message = messages.SEND_SPECIFIC_COUNTRY_TEXT
+    bot.send_message(telegram_id, message.format(country))
+    if configs:
+        for config in configs:
+            bot.send_document(telegram_id, document=Path(config.file.path).open(mode="rb"))
+    else:
+        bot.send_message(telegram_id, messages.NO_AVAILABLE_CONFIGS)

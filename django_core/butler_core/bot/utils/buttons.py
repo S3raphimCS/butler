@@ -1,5 +1,6 @@
 GET_CONFIG = "Получить конфиги"
 CONFIG_DOESNT_WORK = "Конфиг не работает"
+GET_SPECIFIC_COUNTRY_CONFIGS = "Получить конфиги определенной страны"
 CONFIGS = "VPN-Конфигурации"
 MAILINGS = "Рассылки"
 MAILING_SUBSCRIPTION = "Подписаться/Отписаться от рассылок"
