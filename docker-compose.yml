@@ -21,13 +21,13 @@ services:
     devices:
       - /dev/net/tun:/dev/net/tun
 
-  #  celery:
-#    <<: *app_default
-#    command: celery --app server.celery_app.app worker -E --loglevel=info
-#
-#  celery_beat:
-#    <<: *app_default
-#    command: celery --app server.celery_app.app beat --loglevel=info
+  celery:
+    <<: *app_default
+    command: celery --app butler_core.celery_app.app worker -E --loglevel=info
+
+  celery_beat:
+    <<: *app_default
+    command: celery --app butler.celery_app.app beat --loglevel=info
 
   bot:
     <<: *app_default
