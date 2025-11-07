@@ -53,6 +53,15 @@ class Command(BaseCommand):
             timezone=settings.TIME_ZONE,
         )
 
+        daily_at_08_00_cron, _ = CrontabSchedule.objects.get_or_create(
+            minute='0',
+            hour='8',
+            day_of_week='*',
+            day_of_month='*',
+            month_of_year='*',
+            timezone=settings.TIME_ZONE,
+        )
+
         daily_at_02_00_cron, _ = CrontabSchedule.objects.get_or_create(
             minute='0',
             hour='2',
@@ -70,6 +79,14 @@ class Command(BaseCommand):
             defaults={
                 'crontab': daily_at_12_00_cron,
                 'task': 'butler_core.apps.periodic_tasks.tasks.parse_configs',
+            }
+        )
+
+        _ = PeriodicTask.objects.update_or_create(
+            name="Ежедневная рассылка",
+            default={
+                'crontab': daily_at_08_00_cron,
+                'task': 'butler_core.apps.periodic_tasks.tasks.send_daily_mailing'
             }
         )
 

@@ -1,7 +1,7 @@
 import subprocess
 import time
-from loguru import logger
 
+from loguru import logger
 import requests
 
 

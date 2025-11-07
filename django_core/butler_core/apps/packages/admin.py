@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from butler_core.apps.packages.models import Package
+
+
+@admin.register(Package)
+class PackageAdmin(admin.ModelAdmin):
+    pass

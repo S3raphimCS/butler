@@ -1,5 +1,6 @@
 from django.contrib import admin
-from butler_core.apps.users.models import BotUser, BaseUser
+
+from butler_core.apps.users.models import BaseUser, BotUser
 
 
 @admin.register(BaseUser)

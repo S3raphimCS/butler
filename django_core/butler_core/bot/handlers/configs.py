@@ -4,9 +4,21 @@ from telebot import TeleBot
 from telebot.types import CallbackQuery, Message
 
 from butler_core.apps.vpn_configs.models import VpnConfig
+from butler_core.bot.handlers.helpers import get_config_menu_data
+from butler_core.bot.handlers.menu import menu
 from butler_core.bot.utils import messages
 from butler_core.bot.utils.error_handler import ErrorHandler
-from butler_core.bot.handlers.menu import menu
+from butler_core.bot.utils.keyboards import KeyboardConstructor
+
+
+@ErrorHandler.create()
+def config_menu(callback: CallbackQuery, bot: TeleBot) -> None:
+    """Функция для вывода меню действий с конфигурациями."""
+    telegram_id = callback.message.chat.id
+    data = get_config_menu_data()
+    message = messages.CONFIG_MENU
+    keyboard = KeyboardConstructor().create_inline_keyboard(data)
+    bot.send_message(telegram_id, message, reply_markup=keyboard)
 
 
 @ErrorHandler.create()

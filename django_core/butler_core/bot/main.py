@@ -3,11 +3,16 @@ import logging
 from django.conf import settings
 from telebot import TeleBot, logger
 
-from butler_core.bot.handlers.configs import get_configs, config_does_not_work
+from butler_core.bot.handlers.configs import (
+    config_does_not_work,
+    config_menu,
+    get_configs,
+)
 from butler_core.bot.handlers.menu import menu, menu_callback
-from butler_core.bot.handlers.unknown_command import unknown_command
 from butler_core.bot.handlers.start import start
+from butler_core.bot.handlers.unknown_command import unknown_command
 from butler_core.bot.utils.callbacks import Callback
+
 
 logger = logger
 logger.setLevel(logging.DEBUG)
@@ -42,6 +47,9 @@ CALLBACK_HANDLERS_MAP = {
     },
     menu_callback: {
         "func": lambda callback: callback.data == Callback.MENU.value
+    },
+    config_menu: {
+        "func": lambda callback: callback.data == Callback.CONFIG_MENU.value
     }
 }
 

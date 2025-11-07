@@ -1,2 +1,6 @@
 GET_CONFIG = "Получить конфиги"
 CONFIG_DOESNT_WORK = "Конфиг не работает"
+CONFIGS = "VPN-Конфигурации"
+MAILINGS = "Рассылки"
+MAILING_SUBSCRIPTION = "Подписаться/Отписаться от рассылок"
+MENU = "В меню"

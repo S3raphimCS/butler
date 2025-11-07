@@ -9,7 +9,7 @@ class Package(models.Model):
     track_id = models.CharField(max_length=255, verbose_name="Трек номер")
     status = models.CharField(verbose_name="Статус доставки", max_length=255, choices=DeliveryStatus.choices,
                               default=DeliveryStatus.IN_PROGRESS)
-    last_info = models.TextField(verbose_name="Последняя информация",  null=True, blank=True)
+    last_info = models.TextField(verbose_name="Последняя информация", null=True, blank=True)
 
     class Meta:
         verbose_name = "Посылка"

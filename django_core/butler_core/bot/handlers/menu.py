@@ -1,5 +1,5 @@
 from telebot import TeleBot
-from telebot.types import Message, CallbackQuery
+from telebot.types import CallbackQuery, Message
 
 from butler_core.bot.handlers.helpers import get_menu_data
 from butler_core.bot.utils import messages

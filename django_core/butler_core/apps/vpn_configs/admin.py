@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.urls import path
 from loguru import logger
 
-from butler_core.apps.periodic_tasks.tasks import parse_configs, check_unchecked_configs
+from butler_core.apps.periodic_tasks.tasks import check_unchecked_configs, parse_configs
 from butler_core.apps.vpn_configs.models import VpnConfig
 
 

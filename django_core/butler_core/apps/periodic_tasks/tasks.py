@@ -1,15 +1,19 @@
-import os
 import re
 
 import requests
 from bs4 import BeautifulSoup
-from django.conf import settings
-from loguru import logger
 from django.core.files.base import ContentFile
+from loguru import logger
 
 from butler_core import celery_app
+from butler_core.apps.mailing.enums import SendingStatus
+from butler_core.apps.mailing.models import MailingLog, MailingSubscription
 from butler_core.apps.periodic_tasks.helpers import check_vpn_config
+from butler_core.apps.services.currencies.service import ExchangeRatesService
+from butler_core.apps.services.weather.service import YandexWeatherService
 from butler_core.apps.vpn_configs.models import VpnConfig
+from butler_core.bot.main import bot
+from butler_core.bot.utils import messages
 
 
 @celery_app.app.task
@@ -18,7 +22,6 @@ def parse_configs():
         base_url = "http://78.142.193.246:33304/en/"
         download_url = "http://78.142.193.246:33304"
         filename_regex = r"[a-zA-Z0-9.-]+.opengw.net"
-        filepath = settings.MEDIA_ROOT
         payload = {"C_OpenVPN": "on"}
         main_page = requests.get(base_url, params=payload)
         main_page.raise_for_status()
@@ -50,12 +53,14 @@ def parse_configs():
 
             response = requests.get(download_link, timeout=20)
             response.raise_for_status()
-            file = ContentFile(response.content, name=name_match+".ovpn")
+            file = ContentFile(response.content, name=name_match + ".ovpn")
             if not VpnConfig.objects.filter(name__icontains=name_match).exists():
-                VpnConfig.objects.get_or_create(country=country, name=name_match+".ovpn", file=file)
+                VpnConfig.objects.get_or_create(country=country, name=name_match + ".ovpn", file=file)
             # command = ["curl", "--output", f"configs/{name_match}.ovpn", download_link]
             # logger.info((command)
-            logger.success(f"Файл {name_match} успешно сохранен.")
+                logger.success(f"Файл {name_match} успешно сохранен.")
+            else:
+                logger.success("Конфиг уже есть в базе данных.")
 
         except Exception as err:
             logger.error(f"Ошибка при парсинге: {err}")
@@ -90,3 +95,29 @@ def recheck_working_configs():
             logger.error(err)
 
     logger.info("Перепроверка работающих конфигов завершена.")
+
+
+@celery_app.app.task
+def send_daily_mailing():
+    """Задача отправки ежедневной рассылки."""
+    subscriptions = MailingSubscription.objects.filter(is_active=True)
+    currencies = None
+    weather = None
+    try:
+        logger.info("Получение данных для ежедневной рассылки")
+        currencies = ExchangeRatesService().get_data()
+        weather = YandexWeatherService().get_data()
+    except Exception as err:
+        logger.error(f"Возникла ошибка при сборе данных ежедневной рассылки {err}")
+    if currencies and weather:
+        for subscription in subscriptions:
+            try:
+                telegram_id = subscription.user.telegram_id
+                bot.send_message(telegram_id, messages.CURRENCIES.format(*currencies))
+                bot.send_message(telegram_id, messages.WEATHER.format(*weather))
+            except Exception as err:
+                MailingLog.objects.create(mailing=subscription, user=subscription.user, error=str(err), status=SendingStatus.ERROR)
+                logger.error(f"Произошла ошибка при отправки рассылки {err}")
+            else:
+                MailingLog.objects.create(mailing=subscription, user=subscription.user, status=SendingStatus.SUCCESS)
+    logger.info("Ежедневная рассылка завершена.")

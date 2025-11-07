@@ -14,6 +14,7 @@ from pathlib import Path
 
 from decouple import config
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
     "butler_core.bot",
     "butler_core.apps.periodic_tasks",
     "butler_core.apps.vpn_configs",
+    "butler_core.apps.mailing",
 
     "corsheaders",
     "solo",
