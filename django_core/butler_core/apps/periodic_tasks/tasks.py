@@ -51,7 +51,8 @@ def parse_configs():
             response = requests.get(download_link, timeout=20)
             response.raise_for_status()
             file = ContentFile(response.content, name=name_match+".ovpn")
-            VpnConfig.objects.get_or_create(country=country, name=name_match+".ovpn", file=file)
+            if not VpnConfig.objects.filter(name__icontains=name_match).exists():
+                VpnConfig.objects.get_or_create(country=country, name=name_match+".ovpn", file=file)
             # command = ["curl", "--output", f"configs/{name_match}.ovpn", download_link]
             # logger.info((command)
             logger.success(f"Файл {name_match} успешно сохранен.")
