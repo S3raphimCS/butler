@@ -3,6 +3,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 from django.core.files.base import ContentFile
+from django.utils import timezone
 from loguru import logger
 
 from butler_core import celery_app
@@ -56,8 +57,8 @@ def parse_configs():
             file = ContentFile(response.content, name=name_match + ".ovpn")
             if not VpnConfig.objects.filter(name__icontains=name_match).exists():
                 VpnConfig.objects.get_or_create(country=country, name=name_match + ".ovpn", file=file)
-            # command = ["curl", "--output", f"configs/{name_match}.ovpn", download_link]
-            # logger.info((command)
+                # command = ["curl", "--output", f"configs/{name_match}.ovpn", download_link]
+                # logger.info((command)
                 logger.success(f"Файл {name_match} успешно сохранен.")
             else:
                 logger.success("Конфиг уже есть в базе данных.")
@@ -113,10 +114,13 @@ def send_daily_mailing():
         for subscription in subscriptions:
             try:
                 telegram_id = subscription.user.telegram_id
+                bot.send_message(telegram_id,
+                                 messages.DAILY_GREETING.format(timezone.now().date().strftime(format="%d.%d.%Y")))
                 bot.send_message(telegram_id, messages.CURRENCIES.format(*currencies))
                 bot.send_message(telegram_id, messages.WEATHER.format(*weather))
             except Exception as err:
-                MailingLog.objects.create(mailing=subscription, user=subscription.user, error=str(err), status=SendingStatus.ERROR)
+                MailingLog.objects.create(mailing=subscription, user=subscription.user, error=str(err),
+                                          status=SendingStatus.ERROR)
                 logger.error(f"Произошла ошибка при отправки рассылки {err}")
             else:
                 MailingLog.objects.create(mailing=subscription, user=subscription.user, status=SendingStatus.SUCCESS)
