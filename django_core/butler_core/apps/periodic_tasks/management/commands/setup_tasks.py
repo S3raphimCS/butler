@@ -84,7 +84,7 @@ class Command(BaseCommand):
 
         _ = PeriodicTask.objects.update_or_create(
             name="Ежедневная рассылка",
-            default={
+            defaults={
                 'crontab': daily_at_08_00_cron,
                 'task': 'butler_core.apps.periodic_tasks.tasks.send_daily_mailing'
             }
