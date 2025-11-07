@@ -24,6 +24,7 @@ def get_config_menu_data() -> dict:
     callback_data = {
         buttons.GET_CONFIG: Callback.GET_CONFIG.value,
         buttons.CONFIG_DOESNT_WORK: Callback.CONFIG_DOESNT_WORK.value,
+        buttons.GET_SPECIFIC_COUNTRY_CONFIGS: Callback.GET_SPECIFIC_COUNTRY_CONFIGS.value,
         buttons.MENU: Callback.MENU.value,
     }
     return callback_data
