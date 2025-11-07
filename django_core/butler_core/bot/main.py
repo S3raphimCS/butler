@@ -8,6 +8,7 @@ from butler_core.bot.handlers.configs import (
     config_menu,
     get_configs,
 )
+from butler_core.bot.handlers.mailings import mailing_menu, toggle_mailing_subscription
 from butler_core.bot.handlers.menu import menu, menu_callback
 from butler_core.bot.handlers.start import start
 from butler_core.bot.handlers.unknown_command import unknown_command
@@ -50,7 +51,13 @@ CALLBACK_HANDLERS_MAP = {
     },
     config_menu: {
         "func": lambda callback: callback.data == Callback.CONFIG_MENU.value
-    }
+    },
+    mailing_menu: {
+        "func": lambda callback: callback.data == Callback.MAILING_MENU.value
+    },
+    toggle_mailing_subscription: {
+        "func": lambda callback: callback.data == Callback.MAILING_TOGGLE_SUBSCRIBE.value
+    },
 }
 
 
