@@ -120,7 +120,7 @@ def send_daily_mailing():
                 bot.send_message(telegram_id, messages.WEATHER.format(*weather))
             except Exception as err:
                 MailingLog.objects.create(mailing=subscription, user=subscription.user, error=str(err),
-                                          status=SendingStatus.ERROR)
+                                          sending_status=SendingStatus.ERROR)
                 logger.error(f"Произошла ошибка при отправки рассылки {err}")
             else:
                 MailingLog.objects.create(mailing=subscription, user=subscription.user, status=SendingStatus.SUCCESS)
