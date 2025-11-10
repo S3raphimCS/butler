@@ -1,4 +1,5 @@
 import requests
+from django.conf import settings
 
 
 class YandexWeatherService:
@@ -46,7 +47,7 @@ class YandexWeatherService:
     }
 
     def __init__(self):
-        self.api_key = '***REMOVED***'
+        self.api_key = settings.YANDEX_WEATHER_API_KEY
         self.api_url = 'https://api.weather.yandex.ru/v2/forecast?lat=48.480223&lon=135.071917'
         self.forecasts = None
 
@@ -74,7 +75,3 @@ class YandexWeatherService:
             evening_forecast['temp_avg'], evening_forecast["feels_like"],
             self.conditions[evening_forecast["condition"]]]
         return forecast_args
-        # total_text = ("Утро:\n{}°C, ощущается как {}°C, {}\n\n"
-        #               "День:\n{}°C, ощущается как {}°C, {}\n\n"
-        #               "Вечер:\n{}°C, ощущается как {}°C, {}").format(*forecast_args)
-        # return total_text

@@ -158,3 +158,5 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 BOT_TOKEN = config('BOT_TOKEN', default='')
 APP_URL = config('APP_URL', default='')
+
+YANDEX_WEATHER_API_KEY = config("YANDEX_WEATHER_API_KEY", default=None)
